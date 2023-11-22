@@ -1,0 +1,32 @@
+name: edid-decode-snap
+base: core22
+version: '0.1~git20201230.95d81c9-2'
+summary: Decode EDID data in human-readable format
+description: |
+  edid-decode  decodes  EDID  monitor description data in human-readable format.  If [in] is
+  not given, or [in] is '-', then the EDID will be read from standard  input.  If  [out]  is
+  given  then  the EDID that was read from [in] is written to [out] or to standard output if
+  [out] is '-'. By default the output is written as a hex  dump  when  writing  to  standard
+  output or a raw EDID if written to a file.
+
+#grade: devel           # This is for development only.
+#confinement: devmode   # This is for development only. Unconfined snap environment. For production, use strict.
+grade: stable           # This is for releasing in the stable channel.
+confinement: strict     # This is for production only.
+
+apps:
+  edid-decode:
+    command: usr/bin/edid-decode
+    plugs:
+      - home
+      - network
+
+parts:
+  # Install edid-decode from apt
+  edid-decode:
+    plugin: nil
+    stage-packages:
+      - edid-decode
+    override-pull: |
+      apt-get update && apt-get upgrade -y
+      snapcraftctl pull
